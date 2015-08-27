@@ -6,12 +6,14 @@ var BATU = 'batu';
 var ATTACKABLE = 'attackable';
 
 var board = initialBoard();
+board = [
+  [ MARU, EMPTY, BATU ],
+  [ EMPTY, MARU, BATU ],
+  [ MARU, BATU, MARU ]
+]
 
-board[0][0] = MARU;
-board[1][1] = MARU;
-board[2][2] = MARU;
 console.log(board);
-showWinner(board);
+console.log(checkWinner(board));
 
 function makeGameTree(board, player) {
   return {
@@ -120,26 +122,49 @@ function resetUI() {
 
 var K = 3;
 
-function showWinner(board) {
-  for(var x = 0; x < N; x++) {
-    for(var y = 0; y < N; y++) {
-      if(board[x][y] == EMPTY) continue;
-
-      var winner = board[x][y];
-      for(var dx = 0; dx > -K; dx--) {
-        for(var dy = 0; dy > -K; dy--) {
-          console.log(dx); console.log(dy);
-        }
+function checkWinner(board) {
+  var winner = EMPTY;
+  // 縦チェック
+  for(var y = 0; y < N; y++) {
+    for(var x = 0;x < N; x++) {
+      if(board[x][y] == EMPTY || board[0][y] != board[x][y])
+        break;
+      if(x == N -1) {
+        winner = board[x][y];
       }
-
+    }
+    if(winner != EMPTY) {
+      return winner;
     }
   }
 
-  if(false) {
-    $('#message').text(
-      'The winner is ' + board[0][0] + '.'
-    );
+  // 横チェック
+  for(var x = 0; x < N; x++) {
+    for(var y = 0;y < N; y++) {
+      if(board[x][y] == EMPTY || board[x][0] != board[x][y])
+        break;
+      if(y == N -1) {
+        winner = board[x][y];
+      }
+    }
+    if(winner != EMPTY) {
+      return winner;
+    }
   }
+
+  // 斜めチェック
+  for(var i = 0; i < N; i++) {
+    if(board[i][i] == EMPTY || board[0][0] != board[i][i])
+      break;
+    if(i == N - 1) {
+      winner = board[i][i];
+    }
+    if(winner != EMPTY) {
+      return winner;
+    }
+  }
+
+  return winner;
 }
 
 function setUpUIToReset() {
@@ -162,8 +187,16 @@ function resetGame() {
 function shiftToNewGameTree(gameTree) {
   drawGameBoard(gameTree.board, gameTree.player, gameTree.cells);
   resetUI();
-  if (gameTree.cells.length === 0) {
-    showWinner(gameTree.board);
+  var winner = checkWinner(gameTree.board);
+  if(winner != EMPTY) {
+    $('#message').text(
+      'The winner is ' + winner + '.'
+    )
+    setUpUIToReset();
+  }else if (gameTree.cells.length === 0) {
+    $('#message').text(
+      'The game ends in a draw.'
+    )
     setUpUIToReset();
   } else {
     setUpUIToChooseMove(gameTree);
