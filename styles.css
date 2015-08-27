@@ -1,0 +1,67 @@
+/* CSS file placeholder. */
+#main
+{
+  text-align: center;
+}
+
+#game-board > table
+{
+  margin: 0 auto;
+}
+
+#game-board > table th
+{
+  margin: 0;
+  padding: 0.125em 0.25em;
+  line-height: 100%;
+}
+
+#game-board > table .cell
+{
+  background: #090;
+  border: 1px solid #ccc;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+}
+
+#game-board > table .cell > .disc
+{
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  border-radius: 1em;
+  margin: 0.25em;
+}
+
+#game-board > table .cell.white > .disc
+{
+  background: #fff;
+}
+
+#game-board > table .cell.black > .disc
+{
+  background: #000;
+}
+
+#game-board > table .cell.attackable > .disc
+{
+  opacity: 0.8;
+  background: #C0C0C0;
+}
+
+#game-record
+{
+  position : absolute ;
+  top : 0%;
+  bottom : 100%;
+  left : 70%;
+  right : 0%;
+  
+  width:10em;
+  height:23em;
+  overflow-y:auto;
+  
+  font-size:1.25em;
+  line-height:1.25em;
+}
