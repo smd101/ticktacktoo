@@ -7,7 +7,7 @@ var ATTACKABLE = 'attackable';
 
 var board = initialBoard();
 board = [
-  [ MARU, EMPTY, BATU ],
+  [ BATU, EMPTY, MARU ],
   [ EMPTY, MARU, BATU ],
   [ MARU, BATU, MARU ]
 ]
@@ -91,7 +91,7 @@ function drawGameBoard(board, player) {
         ss.push('<th>' + 'abc'[x] + '</th>');
       } else if (x == -1 && 0 <= y) {
         ss.push('<th>' + '123'[y] + '</th>');
-      } else /* if (x == -1 && y == -1) */ {
+      } else {
         ss.push('<th></th>');
       }
     }
@@ -119,8 +119,6 @@ function resetUI() {
   $('#console').empty();
   $('#message').empty();
 }
-
-var K = 3;
 
 function checkWinner(board) {
   var winner = EMPTY;
@@ -152,12 +150,27 @@ function checkWinner(board) {
     }
   }
 
-  // 斜めチェック
+  // 斜め1チェック
   for(var i = 0; i < N; i++) {
     if(board[i][i] == EMPTY || board[0][0] != board[i][i])
       break;
     if(i == N - 1) {
       winner = board[i][i];
+    }
+    if(winner != EMPTY) {
+      return winner;
+    }
+  }
+
+  // 斜め2チェック
+  for(var i = 0 ; i < N; i++) {
+    if(board[0][N-1] == EMPTY)
+      break;
+    if(board[i][N-1-i] != board[0][N-1])
+      break;
+
+    if(i == N - 1) {
+      winner = board[i][N-1-i];
     }
     if(winner != EMPTY) {
       return winner;
@@ -181,9 +194,6 @@ function resetGame() {
   shiftToNewGameTree(makeGameTree(initialBoard(), MARU));
 }
 
-/**
- * 次の局面に移動する.
- */
 function shiftToNewGameTree(gameTree) {
   drawGameBoard(gameTree.board, gameTree.player, gameTree.cells);
   resetUI();
